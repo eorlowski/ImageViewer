@@ -1,23 +1,27 @@
 package orlowski.com.imageviewer;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
 
 public class SettingsActivity extends AppCompatActivity {
+    Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
+        bundle = intent.getExtras();
         ArrayList<String> fileList = bundle.getStringArrayList("fileList");
         setContentView(R.layout.settingsview);
         String path = Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera";
@@ -40,8 +44,11 @@ public class SettingsActivity extends AppCompatActivity {
         directoryView.setText(path);
         TextView textView = (TextView) findViewById(R.id.file_list);
         textView.setText(sb.toString());
-        intent.putExtras(bundle);
-        setResult(RESULT_OK, intent);
+        // Documentation says it's better to create new Intent instead of reusing existing intent
+        Intent mainIntent;
+        mainIntent = new Intent(this, MainActivity.class);
+        mainIntent.putExtras(bundle);
+        setResult(RESULT_OK, mainIntent);
         setupActionBar();
     }
 
@@ -54,6 +61,21 @@ public class SettingsActivity extends AppCompatActivity {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // back button
+                Intent resultIntent = new Intent(this, MainActivity.class);
+                resultIntent.putExtras(bundle);
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
