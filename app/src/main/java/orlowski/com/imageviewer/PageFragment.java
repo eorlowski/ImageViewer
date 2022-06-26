@@ -40,8 +40,10 @@ public class PageFragment extends Fragment {
         try {
             //
             bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(Uri.parse("file:///storage/emulated/0/DCIM/Camera/" + bundle.getString("fileName"))));
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
-            myImage.setImageBitmap(scaledBitmap);
+            if (bitmap != null) {
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
+                myImage.setImageBitmap(scaledBitmap);
+            }
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
